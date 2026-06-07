@@ -29,6 +29,11 @@ jobs:
         cd terraform
         terraform init
 
+    - name: Package Lambda
+      run: |
+        cd lambda
+        zip ../lambda_function.zip handler.py
+
     - name: Terraform Validate
       run: |
         cd terraform
