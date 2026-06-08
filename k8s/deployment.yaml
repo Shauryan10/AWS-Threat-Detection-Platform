@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: threat-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: threat-platform
+  template:
+    metadata:
+      labels:
+        app: threat-platform
+    spec:
+      containers:
+        - name: threat-platform
+          image: threat-platform:latest
+          imagePullPolicy: Never
+          env:
+            - name: AWS_DEFAULT_REGION
+              value: "ap-south-1"
+            - name: TABLE_NAME
+              value: "security-incidents"
+            - name: SNS_TOPIC_ARN
+              value: "dummy-topic"
+            - name: LOCAL_MODE
+              value: "true"

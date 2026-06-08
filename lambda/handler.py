@@ -3,11 +3,13 @@ import boto3
 import os
 from datetime import datetime
 
-sns = boto3.client('sns')
-dynamodb = boto3.resource('dynamodb')
+LOCAL_MODE = os.environ.get("LOCAL_MODE", "false").lower() == "true"
 
-TABLE_NAME = os.environ['TABLE_NAME']
-SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']
+sns = boto3.client("sns")
+dynamodb = boto3.resource("dynamodb")
+
+TABLE_NAME = os.environ.get("TABLE_NAME", "security-incidents")
+SNS_TOPIC_ARN = os.environ.get("SNS_TOPIC_ARN", "dummy-topic")
 
 table = dynamodb.Table(TABLE_NAME)
 
@@ -21,8 +23,8 @@ THREAT_SEVERITY = {
 
 AUTO_RESPONSE_MODE = "dry-run"
 
-def lambda_handler(event, context):
 
+def lambda_handler(event, context):
     print("Received Event:")
     print(json.dumps(event))
 
@@ -36,22 +38,18 @@ def lambda_handler(event, context):
 
     severity = THREAT_SEVERITY.get(event_name, "MEDIUM")
 
-    auto_response = ""
-
     if event_name == "CreateAccessKey":
         auto_response = "Would disable newly created access key"
-
     elif event_name == "DeleteTrail":
         auto_response = "Would re-enable CloudTrail immediately"
-
     elif event_name == "StopLogging":
-        auto_response = "Would restart logging"
-
+        auto_response = "Would restart CloudTrail logging"
     elif event_name == "AuthorizeSecurityGroupIngress":
         auto_response = "Would revoke dangerous ingress rule"
-
     elif event_name == "PutBucketPolicy":
         auto_response = "Would revert risky bucket policy"
+    else:
+        auto_response = "No automated response configured"
 
     incident = {
         "incident_id": str(datetime.utcnow().timestamp()),
@@ -64,7 +62,12 @@ def lambda_handler(event, context):
         "mode": AUTO_RESPONSE_MODE
     }
 
-    table.put_item(Item=incident)
+    if LOCAL_MODE:
+        print("LOCAL MODE: DynamoDB insert skipped")
+        print("Incident:")
+        print(json.dumps(incident, indent=2))
+    else:
+        table.put_item(Item=incident)
 
     message = f"""
 AWS SECURITY INCIDENT DETECTED
@@ -80,11 +83,16 @@ AUTO RESPONSE:
 Mode: {AUTO_RESPONSE_MODE}
 """
 
-    sns.publish(
-        TopicArn=SNS_TOPIC_ARN,
-        Subject=f"[{severity}] AWS Security Alert",
-        Message=message
-    )
+    if LOCAL_MODE:
+        print("LOCAL MODE: SNS alert skipped")
+        print("Alert Message:")
+        print(message)
+    else:
+        sns.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Subject=f"[{severity}] AWS Security Alert",
+            Message=message
+        )
 
     return {
         "statusCode": 200,
