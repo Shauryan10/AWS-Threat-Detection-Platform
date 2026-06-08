@@ -77,8 +77,7 @@ Severity: {severity}
 User: {username}
 Source IP: {source_ip}
 
-AUTO RESPONSE:
-{auto_response}
+AUTO RESPONSE:{auto_response}
 
 Mode: {AUTO_RESPONSE_MODE}
 """
