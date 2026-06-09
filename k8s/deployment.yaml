@@ -16,6 +16,7 @@ spec:
         - name: threat-platform
           image: threat-platform:latest
           imagePullPolicy: Never
+
           env:
             - name: AWS_DEFAULT_REGION
               value: "ap-south-1"
@@ -25,3 +26,19 @@ spec:
               value: "dummy-topic"
             - name: LOCAL_MODE
               value: "true"
+
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
