@@ -262,19 +262,68 @@ This project helped in understanding:
 * Security scanning pipelines
 
 ---
-
 # 📸 Screenshots
 
-> Add screenshots here:
+## AWS Lambda Function
 
-* AWS Lambda
-* EventBridge
-* DynamoDB incidents
-* SNS alerts
-* GitHub Actions
-* Trivy scans
-* Kubernetes pods
-* Grafana dashboards
+![AWS Lambda Function](screenshots/lambda.png)
+
+---
+
+## CloudWatch Logs
+
+![CloudWatch Logs](screenshots/logs.png)
+
+---
+
+## SNS Email Alert
+
+![SNS Email Alert](screenshots/sns.png)
+
+---
+
+## GitHub Actions CI/CD Pipeline
+
+![GitHub Actions](screenshots/github%20actions.png)
+
+---
+
+## Trivy Security Scan
+
+![Trivy Security Scan](screenshots/trivy%20scan.png)
+
+---
+
+## Kubernetes Deployment
+
+![Kubernetes Deployment](screenshots/kubernetes.png)
+
+---
+
+## Grafana Dashboard
+
+![Grafana Dashboard](screenshots/grafana\(1\).png)
+
+---
+
+## Grafana Monitoring Metrics
+
+![Grafana Monitoring Metrics](screenshots/grafana\(2\).png)
+
+---
+
+### Screenshot Highlights
+
+These screenshots demonstrate:
+
+* Successful AWS Lambda deployment
+* CloudWatch event logging
+* SNS security alert notifications
+* GitHub Actions CI/CD execution
+* Trivy vulnerability scanning
+* Kubernetes pod deployment
+* Grafana observability dashboards
+* End-to-end DevSecOps workflow implementation
 
 ---
 
